@@ -9,16 +9,33 @@ const sizes = {
 
 let canvas, renderer;
 let raycaster, mouse;
-let rayCastableObjects = [];
+
+let highlightableObjects = [];
+let facebookLink = [];
+let linkedinLink = [];
+let portfolioLink = [];
+let instagramLink = [];
 
 raycaster = new THREE.Raycaster();
 mouse = new THREE.Vector2();
+const loadingManager = new THREE.LoadingManager();
+
+const progressBar = document.getElementById("progress-bar");
+const progressBarContainer = document.getElementById("progress-bar-container");
+
+loadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+  progressBar.value = (itemsLoaded / itemsTotal) * 100;
+};
+
+loadingManager.onLoad = function () {
+  progressBarContainer.style.zIndex = 0;
+};
 
 //Scene
 const scene = new THREE.Scene();
 
 // //Design Object
-let gltfLoader = new GLTFLoader();
+let gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.load(
   "/public/cave/scene.gltf",
   (gltf) => {
@@ -37,7 +54,7 @@ gltfLoader.load("/public/magic_crystals/scene.gltf", (gltf) => {
   gltf.scene.scale.set(0.01, 0.02, 0.005);
   gltf.scene.name = "magic_crystal";
   scene.add(gltf.scene);
-  rayCastableObjects.push(gltf.scene);
+  highlightableObjects.push(gltf.scene);
 });
 
 gltfLoader.load("/public/chest_lootbox/scene.gltf", (gltf) => {
@@ -46,7 +63,8 @@ gltfLoader.load("/public/chest_lootbox/scene.gltf", (gltf) => {
   gltf.scene.scale.set(1.2, 1.2, 1.2);
   gltf.scene.name = "portfolio_icon";
   scene.add(gltf.scene);
-  rayCastableObjects.push(gltf.scene);
+  highlightableObjects.push(gltf.scene);
+  portfolioLink.push(gltf.scene);
 });
 
 gltfLoader.load("/public/facebook_logo/scene.gltf", (gltf) => {
@@ -55,7 +73,8 @@ gltfLoader.load("/public/facebook_logo/scene.gltf", (gltf) => {
   gltf.scene.scale.set(0.001, 0.001, 0.001);
   gltf.scene.name = "portfolio_icon";
   scene.add(gltf.scene);
-  rayCastableObjects.push(gltf.scene);
+  highlightableObjects.push(gltf.scene);
+  facebookLink.push(gltf.scene);
 });
 
 gltfLoader.load("/public/instagram_logo_3d_-_colored/scene.gltf", (gltf) => {
@@ -64,7 +83,8 @@ gltfLoader.load("/public/instagram_logo_3d_-_colored/scene.gltf", (gltf) => {
   gltf.scene.scale.set(0.12, 0.12, 0.12);
   gltf.scene.name = "portfolio_icon";
   scene.add(gltf.scene);
-  rayCastableObjects.push(gltf.scene);
+  highlightableObjects.push(gltf.scene);
+  instagramLink.push(gltf.scene);
 });
 
 gltfLoader.load("/public/linkedin_3d/scene.gltf", (gltf) => {
@@ -73,7 +93,8 @@ gltfLoader.load("/public/linkedin_3d/scene.gltf", (gltf) => {
   gltf.scene.scale.set(1.2, 1.2, 1.2);
   gltf.scene.name = "portfolio_icon";
   scene.add(gltf.scene);
-  rayCastableObjects.push(gltf.scene);
+  highlightableObjects.push(gltf.scene);
+  linkedinLink.push(gltf.scene);
 });
 
 //Light
@@ -200,7 +221,7 @@ function raycasterOnMouseMove(event) {
 
   raycaster.setFromCamera(mouse, camera);
 
-  var intersects = raycaster.intersectObjects(rayCastableObjects, true);
+  var intersects = raycaster.intersectObjects(highlightableObjects, true);
 
   if (intersects.length > 0) {
     intersects[0].object.material.transparent = true;
@@ -208,13 +229,42 @@ function raycasterOnMouseMove(event) {
   }
 }
 
-function raycasterOnMouseMoveOff() {
-  for (let i = 0; i < scene.children.length; i++) {
-    if (scene.children[i].material) {
-      scene.children[i].material.opacity = 1.0;
-      scene.children[i].material.transparent = false;
-    }
+// function raycasterOnMouseMoveOff() {
+//   for (let i = 0; i < scene.children.length; i++) {
+//     if (scene.children[i].material) {
+//       scene.children[i].material.opacity = 1.0;
+//       scene.children[i].material.transparent = false;
+//     }
+//   }
+// }
+
+function raycasterOnMouseClick(event) {
+  event.preventDefault();
+
+  var rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / (rect.width - rect.left)) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  var intersectsLinkedin = raycaster.intersectObjects(linkedinLink, true);
+  var intersectsPortfolio = raycaster.intersectObjects(portfolioLink, true);
+  var intersectsFacebook = raycaster.intersectObjects(facebookLink, true);
+  var intersectsInstagram = raycaster.intersectObjects(instagramLink, true);
+
+  if (intersectsLinkedin.length > 0) {
+    window.location.href = "https://www.linkedin.com/in/bensmithjava/";
+  }
+  if (intersectsPortfolio.length > 0) {
+    window.location.href = "https://bjsmith489.github.io/portfolio-website/";
+  }
+  if (intersectsFacebook.length > 0) {
+    console.log("intersectsFacebook");
+  }
+  if (intersectsInstagram.length > 0) {
+    console.log("intersectsInstagram");
   }
 }
 
 window.addEventListener("mousemove", raycasterOnMouseMove);
+window.addEventListener("click", raycasterOnMouseClick);
