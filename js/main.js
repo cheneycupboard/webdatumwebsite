@@ -37,7 +37,7 @@ const scene = new THREE.Scene();
 // //Design Object
 let gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.load(
-  "./../public/cave/scene.gltf",
+  "../public/cave/scene.gltf",
   (gltf) => {
     gltf.scene.scale.set(5, 5, 5);
     gltf.scene.name = "cave";
@@ -48,7 +48,7 @@ gltfLoader.load(
     console.error(error);
   }
 );
-gltfLoader.load("./../public/magic_crystals/scene.gltf", (gltf) => {
+gltfLoader.load("../public/magic_crystals/scene.gltf", (gltf) => {
   gltf.scene.position.set(-8, -8, 0);
   gltf.scene.rotation.set(0, 0.5, 0);
   gltf.scene.scale.set(0.01, 0.02, 0.005);
@@ -57,7 +57,7 @@ gltfLoader.load("./../public/magic_crystals/scene.gltf", (gltf) => {
   highlightableObjects.push(gltf.scene);
 });
 
-gltfLoader.load("./../public/chest_lootbox/scene.gltf", (gltf) => {
+gltfLoader.load("../public/chest_lootbox/scene.gltf", (gltf) => {
   gltf.scene.position.set(-2.5, -13.1, -10.2);
   gltf.scene.rotation.set(-0.5, 0.5, 0);
   gltf.scene.scale.set(1.2, 1.2, 1.2);
@@ -67,7 +67,7 @@ gltfLoader.load("./../public/chest_lootbox/scene.gltf", (gltf) => {
   portfolioLink.push(gltf.scene);
 });
 
-gltfLoader.load("./../public/facebook_logo/scene.gltf", (gltf) => {
+gltfLoader.load("../public/facebook_logo/scene.gltf", (gltf) => {
   gltf.scene.position.set(-5, -12.7, -10.7);
   gltf.scene.rotation.set(-0.5, 0.5, 0);
   gltf.scene.scale.set(0.001, 0.001, 0.001);
@@ -78,7 +78,7 @@ gltfLoader.load("./../public/facebook_logo/scene.gltf", (gltf) => {
 });
 
 gltfLoader.load(
-  "./../public/instagram_logo_3d_-_colored/scene.gltf",
+  "../public/instagram_logo_3d_-_colored/scene.gltf",
   (gltf) => {
     gltf.scene.position.set(-5.5, -13.5, -8.9);
     gltf.scene.rotation.set(-0.8, 0.5, 0.2);
@@ -90,7 +90,7 @@ gltfLoader.load(
   }
 );
 
-gltfLoader.load("./../public/linkedin_3d/scene.gltf", (gltf) => {
+gltfLoader.load("../public/linkedin_3d/scene.gltf", (gltf) => {
   gltf.scene.position.set(-8.2, -12.6, -9.2);
   gltf.scene.rotation.set(-1, 0.5, 0);
   gltf.scene.scale.set(1.2, 1.2, 1.2);
